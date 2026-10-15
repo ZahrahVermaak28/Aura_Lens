@@ -1,0 +1,6 @@
+{
+  "name": "AuraLens - TikTok Sentiment Intelligence Platform",
+  "description": "AuraLens: TikTok sentiment analysis platform using VADER, Hugging Face Transformers, emoji intelligence, and emotion classification.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

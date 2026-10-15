@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --bg-primary: #F7FAF7;
+    --bg-card: #FFFFFF;
+    --bg-elevated: #E8F1EA;
+    --text-primary: #24382D;
+    --text-secondary: #718579;
+    --accent: #285943;
+    --accent-light: #A3BFA8;
+    --accent-mint: #DCEEE1;
+    --accent-highlight: #76A98A;
+    --border-color: #E2ECE5;
+  }
+
+  .dark {
+    --bg-primary: #101D17;
+    --bg-card: #1C3025;
+    --bg-elevated: #263D30;
+    --text-primary: #EAF5EC;
+    --text-secondary: #A5C2AC;
+    --accent: #88C9A1;
+    --accent-light: #3D5A46;
+    --accent-mint: #223B2D;
+    --accent-highlight: #88C9A1;
+    --border-color: #274233;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #A3BFA8;
+  border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #2D4838;
+}
+
+/* Botanical subtle pattern for cards */
+.botanical-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.botanical-glow::after {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 140px;
+  height: 140px;
+  background: radial-gradient(circle, rgba(163, 191, 168, 0.15) 0%, rgba(220, 238, 225, 0) 70%);
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+.dark .botanical-glow::after {
+  background: radial-gradient(circle, rgba(136, 201, 161, 0.12) 0%, rgba(38, 61, 48, 0) 70%);
+}
