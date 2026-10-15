@@ -1,53 +1,33 @@
-import React, { useState } from 'react';
-import { Search, Upload, Play, CheckCircle2, AlertCircle, Sparkles, Database } from 'lucide-react';
 
-interface VideoInputBarProps {
-  onAnalyzeUrl: (url: string, demoMode: boolean, sampleDataset: string) => void;
-  onOpenCsvModal: () => void;
-  isAnalyzing: boolean;
-  progressStep: number;
-}
+const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
 
-const PROGRESS_STEPS = [
-  'Validating video link',
-  'Retrieving comments',
-  'Preparing text',
-  'Running VADER',
-  'Running Hugging Face',
-  'Generating visualisations',
-  'Analysis complete',
-];
+  if (isAnalyzing) return;
 
-export const VideoInputBar: React.FC<VideoInputBarProps> = ({
-  onAnalyzeUrl,
-  onOpenCsvModal,
-  isAnalyzing,
-  progressStep,
-}) => {
-  const [url, setUrl] = useState('https://www.tiktok.com/@sarah.botanicals/video/739182390142981023');
-  const [demoMode, setDemoMode] = useState(true);
-  const [dataset, setDataset] = useState<'lifestyle' | 'tech'>('lifestyle');
+  const cleanUrl = url.trim();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const cleanUrl = url.trim();
-    if (!cleanUrl) return;
+  if (!cleanUrl) {
+    return;
+  }
 
-    // Distinguish between sample datasets and real custom TikTok links
-    const isSampleLifestyle = cleanUrl.includes('sarah.botanicals');
-    const isSampleTech = cleanUrl.includes('mkbhd');
+  // Only use sample comments when demo mode is selected.
+  if (demoMode) {
+    onAnalyzeUrl(cleanUrl, true, dataset);
+    return;
+  }
 
-    if (isSampleLifestyle) {
-      setDataset('lifestyle');
-      onAnalyzeUrl(cleanUrl, true, 'lifestyle');
-    } else if (isSampleTech) {
-      setDataset('tech');
-      onAnalyzeUrl(cleanUrl, true, 'tech');
-    } else {
-      // Real TikTok video URL requested by the user
-      onAnalyzeUrl(cleanUrl, false, 'custom');
-    }
-  };
+  // Analyse the real TikTok video URL.
+  const isTikTokUrl =
+    /^https?:\/\/(www\.|m\.)?tiktok\.com\/.+/i.test(cleanUrl) ||
+    /^https?:\/\/(vm|vt)\.tiktok\.com\/.+/i.test(cleanUrl);
+
+  if (!isTikTokUrl) {
+    alert("Please enter a valid TikTok video URL.");
+    return;
+  }
+
+  onAnalyzeUrl(cleanUrl, false, "custom");
+};
 
   const handleSelectSample = (sampleType: 'lifestyle' | 'tech') => {
     setDataset(sampleType);
@@ -72,7 +52,10 @@ export const VideoInputBar: React.FC<VideoInputBarProps> = ({
             <input
               type="text"
               value={url}
-              onChange={(e) => setUrl(e.target.value)}
+           onChange={(e) => {
+  setUrl(e.target.value);
+  setDemoMode(false);
+}}
               placeholder="Paste a TikTok video link to discover what people are saying..."
               className="w-full pl-12 pr-4 py-3.5 bg-[#F7FAF7] dark:bg-[#15271D] border border-[#E2ECE5] dark:border-[#243E2E] rounded-xl text-sm font-medium text-[#24382D] dark:text-[#EAF5EC] placeholder-[#718579] dark:placeholder-[#A5C2AC]/60 focus:outline-none focus:ring-2 focus:ring-[#285943] dark:focus:ring-[#88C9A1] transition-all"
               disabled={isAnalyzing}
